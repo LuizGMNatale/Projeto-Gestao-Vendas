@@ -15,7 +15,7 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (usuarioRepository.count() == 0) { // Se a tabela estiver vazia, cria um usuário padrão
+        if (usuarioRepository.count() == 0) {
             Usuario usuario = new Usuario();
             usuario.setUsername("admin");
             usuario.setPassword("123456");

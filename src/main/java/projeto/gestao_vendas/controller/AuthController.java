@@ -3,13 +3,13 @@ package projeto.gestao_vendas.controller;
 import projeto.gestao_vendas.model.Usuario;
 import projeto.gestao_vendas.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -17,19 +17,22 @@ public class AuthController {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Usuario usuario) {
+    public String login(@ModelAttribute Usuario usuario, HttpSession session, Model model) {
         Optional<Usuario> usuarioEncontrado = usuarioRepository.findByUsername(usuario.getUsername());
-    
-        if (usuarioEncontrado.isEmpty()) {
-            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Usuário ou senha incorretos"));
+
+        if (usuarioEncontrado.isEmpty() || 
+            !usuarioEncontrado.get().getPassword().equals(usuario.getPassword())) {
+            model.addAttribute("error", "Usuário ou senha incorretos");
+            return "index";
         }
-    
-        // Comparação correta da senha
-        if (!usuarioEncontrado.get().getPassword().equals(usuario.getPassword())) {
-            return ResponseEntity.status(401).body(Collections.singletonMap("error", "Usuário ou senha incorretos"));
-        }
-    
-        return ResponseEntity.ok(Collections.singletonMap("message", "Login bem-sucedido!"));
+
+        session.setAttribute("user", usuarioEncontrado.get());
+        return "redirect:/dashboard";
     }
-    
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
 }
