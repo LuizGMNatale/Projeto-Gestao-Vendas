@@ -17,9 +17,10 @@
             <div class="login-header">Sistema de Vendas</div>
 
 
-            <div th:if="${error}" class="alert alert-danger text-center">
+            <div th:if="${error}" class="alert alert-danger text-center custom-alert">
                 <p th:text="${error}"></p>
             </div>
+            
 
             <!-- Formulário de login -->
             <form id="loginForm" method="post" th:action="@{/auth/login}">
@@ -38,6 +39,7 @@
             </form>
         </div>
     </div>
+
     <script th:src="@{/js/script.js}"></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 body {
     background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
 }
 
 .login-container {
@@ -40,4 +41,50 @@ body {
     margin-top: 10px;
     color: #6c757d;
 }
+
+.custom-alert {
+    padding: 6px 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.sidebar {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;   
+}
+@media (max-width: 768px) {
+    .sidebar {
+        height: auto;
+        position: relative;
+    }
+}
+.card h5 {
+    margin-bottom: 0;
+}
+
+
+.sidebar ul {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar .nav-item:last-child {
+    margin-top: auto;
+}
+
+.sidebar h4 {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
 
