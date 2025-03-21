@@ -1,0 +1,31 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_gestao_vendas
+    restart: always
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: gestao_vendas_app
+    restart: always
+    depends_on:
+      - mysql
+    env_file: .env
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysql_data:
