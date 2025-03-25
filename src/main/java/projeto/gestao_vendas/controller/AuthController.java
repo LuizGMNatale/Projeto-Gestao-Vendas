@@ -23,16 +23,16 @@ public class AuthController {
         if (usuarioEncontrado.isEmpty() || 
             !usuarioEncontrado.get().getPassword().equals(usuario.getPassword())) {
             model.addAttribute("error", "Usuário ou senha incorretos");
-            return "/index"; 
+            return "index";
         }
 
         session.setAttribute("user", usuarioEncontrado.get());
-        return "redirect:/dashboard"; 
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/"; 
+        return "redirect:/";
     }
 }

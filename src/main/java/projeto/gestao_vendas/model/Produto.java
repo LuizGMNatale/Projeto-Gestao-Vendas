@@ -15,7 +15,7 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(unique = true, nullable = false, length = 255)
     @NotBlank(message = "O nome do produto é obrigatório")
     @Size(min = 3, max = 255, message = "O nome deve ter entre 3 e 255 caracteres")
     private String nome;

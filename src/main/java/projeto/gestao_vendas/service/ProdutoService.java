@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.gestao_vendas.model.Produto;
 import projeto.gestao_vendas.repository.ProdutoRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +22,12 @@ public class ProdutoService {
     }
 
     public Produto salvarProduto(Produto produto) {
+        Optional<Produto> produtoExistente = produtoRepository.findByNome(produto.getNome());
+
+        if (produtoExistente.isPresent() && !produtoExistente.get().getId().equals(produto.getId())) {
+            throw new IllegalArgumentException("Já existe um produto cadastrado com esse nome.");
+        }
+
         return produtoRepository.save(produto);
     }
 

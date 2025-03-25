@@ -13,7 +13,6 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-
   app:
     build: .
     container_name: gestao_vendas_app
@@ -26,6 +25,8 @@ services:
       DB_PORT: 3306
     ports:
       - "8080:8080"
+    volumes:
+      - ./src/main/resources/static:/app/static
 
 volumes:
   mysql_data:
