@@ -13,5 +13,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     @Query("SELECT COUNT(p) FROM Produto p")
     Long contarProdutos();
     Optional<Produto> findByNome(String nome);
+    
 }
 

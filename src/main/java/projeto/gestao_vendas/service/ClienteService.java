@@ -23,7 +23,8 @@ public class ClienteService {
     }
 
     public Cliente salvarOuAtualizar(Cliente cliente) {
-        if (clienteRepository.existsByCpfCnpjAndIdNot(cliente.getCpfCnpj(), cliente.getId() == null ? 0L : cliente.getId())) {
+        if (clienteRepository.existsByCpfCnpjAndIdNot(cliente.getCpfCnpj(),
+                cliente.getId() == null ? 0L : cliente.getId())) {
             throw new RuntimeException("Já existe um cliente com este CPF/CNPJ.");
         }
         return clienteRepository.save(cliente);
@@ -35,4 +36,17 @@ public class ClienteService {
         }
         clienteRepository.deleteById(id);
     }
+
+    public List<Cliente> buscarPorNome(String nome) {
+        return clienteRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public Optional<Cliente> buscarPorCpfCnpj(String cpfCnpj) {
+        return clienteRepository.findByCpfCnpj(cpfCnpj);
+    }
+
+    public boolean verificarSeClienteExiste(String nome, String cpfCnpj) {
+        return clienteRepository.existsByNomeAndCpfCnpj(nome, cpfCnpj);
+    }
+    
 }

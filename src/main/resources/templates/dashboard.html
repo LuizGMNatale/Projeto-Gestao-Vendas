@@ -22,9 +22,9 @@
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/dashboard}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/produtos}">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/clientes}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Relatórios</a></li>                
-                    <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>                   
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/vendas}">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/relatorios}">Relatórios</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>                  
                 </ul>
             </nav>
             
@@ -41,7 +41,7 @@
                     <div class="col-6 col-md-3">
                         <div class="card text-white bg-success p-3">
                             <p>Valor total vendido</p>
-                            <h5 th:text="'R$ ' + ${valorTotalVendido}"></h5>
+                            <h5 th:text="'R$ ' + ${#numbers.formatDecimal(valorTotalVendido, 1, 2, 'COMMA')}"></h5>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
@@ -65,22 +65,22 @@
                         <table class="table table-striped">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Cobrado</th>
-                                    <th>Pago</th>
-                                    <th>Troco</th>
-                                    <th>Pagamento</th>
+                                    <th class="text-center">ID Venda</th>
+                                    <th class="text-center">ID Cliente</th>
+                                    <th class="text-end">Valor Total</th>
+                                    <th class="text-end">Qtd. Itens</th>
+                                    <th class="text-end">Data e Hora</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="venda : ${ultimasVendas}">
-                                    <td th:text="${venda.numero}"></td>
-                                    <td th:text="'R$ ' + ${venda.cobrado}"></td>
-                                    <td th:text="'R$ ' + ${venda.pago}"></td>
-                                    <td th:text="'R$ ' + ${venda.troco}"></td>
-                                    <td th:text="${venda.pagamento}"></td>
+                                    <td class="text-center" th:text="${venda.id}"></td>
+                                    <td class="text-center" th:text="${venda.cliente.id}"></td>
+                                    <td class="text-end" th:text="'R$ ' + ${#numbers.formatDecimal(venda.total, 1, 2, 'COMMA')}"></td>
+                                    <td class="text-end" th:text="${venda.itens.size()}"></td>
+                                    <td class="text-end" th:text="${#temporals.format(venda.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
                                 </tr>
-                            </tbody>
+                            </tbody>       
                         </table>
                         <p th:if="${#lists.isEmpty(ultimasVendas)}" class="text-center text-muted">Nenhuma venda realizada.</p>
                     </div>

@@ -30,6 +30,6 @@ public class Produto {
 
     @Column(nullable = false)
     @NotNull(message = "A quantidade em estoque é obrigatória")
-    @Min(value = 1, message = "A quantidade deve ser pelo menos 1")
+    @Min(value = 0, message = "A quantidade nao pode ser um valor negativo")
     private Integer quantidadeEmEstoque;
 }

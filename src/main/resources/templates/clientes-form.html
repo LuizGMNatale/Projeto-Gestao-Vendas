@@ -20,8 +20,8 @@
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/dashboard}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/produtos}">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/clientes}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Relatórios</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/vendas}">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/relatorios}">Relatórios</a></li>
                     <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>
                 </ul>
             </nav>
@@ -77,60 +77,63 @@
 
     <script>
         $(document).ready(function () {
-            $("#cpfCnpj").unmask();
-
-            $("#cpfCnpj").focusout(function () {
-                let valor = $(this).val().replace(/\D/g, '');
-                $(this).unmask();
-
-                if (valor.length === 11) {
-                    $(this).mask("000.000.000-00");
-                } else if (valor.length === 14) {
-                    $(this).mask("00.000.000/0000-00");
-                }
-
-                validarCpfCnpj();
-            });
-
-            $("#cpfCnpj").focusin(function () {
-                $(this).unmask();
-            });
-
+            // Aplicar máscara ao telefone
             $("#telefone").mask("(00) 00000-0000");
-
-            $("#clienteForm").on("submit", function (e) {
-                if (!validarCpfCnpj()) {
-                    e.preventDefault();
-                }
-            });
-
+    
+            // Função para validar CPF/CNPJ e exibir erro
             function validarCpfCnpj() {
                 let campo = $("#cpfCnpj");
                 let valor = campo.val().replace(/\D/g, '');
                 let mensagemErro = $("#cpfCnpjErro");
-
-                if (valor.length !== 11 && valor.length !== 14) {
-                    mensagemErro.text("CPF/CNPJ inválido!");
+    
+                if (valor.length === 11) {
+                    campo.mask("000.000.000-00");
+                } else if (valor.length === 14) {
+                    campo.mask("00.000.000/0000-00");
+                } else {
+                    // Apenas exibe erro se já não houver outro erro vindo do backend
+                    if (mensagemErro.length === 0) {
+                        campo.after('<div id="cpfCnpjErro" class="text-danger mt-1">CPF/CNPJ inválido!</div>');
+                    } else {
+                        mensagemErro.text("CPF/CNPJ inválido!").css("color", "red");
+                    }
                     campo.css("border", "2px solid red");
                     return false;
-                } else {
-                    mensagemErro.text("");
-                    campo.css("border", "");
-                    return true;
                 }
+    
+                // Remover erro caso CPF/CNPJ seja válido
+                if (mensagemErro.length > 0 && mensagemErro.text() === "CPF/CNPJ inválido!") {
+                    mensagemErro.remove();
+                }
+                campo.css("border", "");
+                return true;
             }
-        });
-
-        $("#clienteForm").on("submit", function () {
-            let telefone = $("#telefone").val().replace(/\D/g, '');
-            $("#telefone").val(telefone);
-        });
-
-        $("#clienteForm").on("submit", function () {
-            let cpfCnpj = $("#cpfCnpj").val().replace(/\D/g, '');
-            $("#cpfCnpj").val(cpfCnpj);
+    
+            // Aplicar máscara e validar CPF/CNPJ ao sair do campo
+            $("#cpfCnpj").on("focusout", function () {
+                validarCpfCnpj();
+            });
+    
+            // Remover máscara ao focar no campo para evitar formatação errada na edição
+            $("#cpfCnpj").on("focusin", function () {
+                $(this).unmask();
+            });
+    
+            // Validação antes de enviar o formulário
+            $("#clienteForm").on("submit", function (e) {
+                let cpfCnpjValido = validarCpfCnpj();
+                if (!cpfCnpjValido) {
+                    e.preventDefault(); // Impede o envio do formulário se CPF/CNPJ for inválido
+                }
+    
+                // Remover máscaras antes de enviar os dados ao backend
+                $("#telefone").val($("#telefone").val().replace(/\D/g, ''));
+                $("#cpfCnpj").val($("#cpfCnpj").val().replace(/\D/g, ''));
+            });
         });
     </script>
+    
+    
 
 </body>
 

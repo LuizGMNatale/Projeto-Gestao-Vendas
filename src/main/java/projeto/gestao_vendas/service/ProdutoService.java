@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.gestao_vendas.model.Produto;
 import projeto.gestao_vendas.repository.ProdutoRepository;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,7 +34,20 @@ public class ProdutoService {
         return produtoRepository.save(produto);
     }
 
+    public Optional<Produto> buscarPorNome(String nome) {
+        return produtoRepository.findByNome(nome);
+    }
+
     public void deletarProduto(Long id) {
         produtoRepository.deleteById(id);
     }
+
+    public Map<Long, Integer> verificarEstoque(List<Long> produtoIds) {
+        Map<Long, Integer> estoqueMap = new HashMap<>();
+        for (Long id : produtoIds) {
+            produtoRepository.findById(id).ifPresent(produto -> estoqueMap.put(id, produto.getQuantidadeEmEstoque()));
+        }
+        return estoqueMap;
+    }
+
 }

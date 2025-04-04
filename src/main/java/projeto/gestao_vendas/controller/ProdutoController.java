@@ -1,6 +1,7 @@
 package projeto.gestao_vendas.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -9,7 +10,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import projeto.gestao_vendas.model.Produto;
 import projeto.gestao_vendas.service.ProdutoService;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
@@ -35,7 +38,8 @@ public class ProdutoController {
     }
 
     @PostMapping("/salvar")
-    public String salvarProduto(@Valid @ModelAttribute Produto produto, BindingResult result, RedirectAttributes attributes) {
+    public String salvarProduto(@Valid @ModelAttribute Produto produto, BindingResult result,
+            RedirectAttributes attributes) {
         try {
             produtoService.salvarProduto(produto);
             attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
@@ -43,9 +47,8 @@ public class ProdutoController {
         } catch (IllegalArgumentException e) {
             result.rejectValue("nome", "error.produto", e.getMessage());
         }
-            return "produto-form";
+        return "produto-form";
     }
-    
 
     @GetMapping("/editar/{id}")
     public String exibirFormularioEdicao(@PathVariable Long id, Model model) {
@@ -62,4 +65,26 @@ public class ProdutoController {
         produtoService.deletarProduto(id);
         return "redirect:/produtos";
     }
+
+    @GetMapping("/nome/{nome}")
+    public ResponseEntity<Produto> buscarPorNome(@PathVariable String nome) {
+        Optional<Produto> produtoOpt = produtoService.buscarPorNome(nome);
+        return produtoOpt.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<String>> listarTodosOsProdutos() {
+        List<String> nomesProdutos = produtoService.listarProdutos().stream()
+                .map(Produto::getNome)
+                .toList();
+        return ResponseEntity.ok(nomesProdutos);
+    }
+
+    @PostMapping("/verificar-estoque")
+    @ResponseBody
+    public ResponseEntity<Map<Long, Integer>> verificarEstoque(@RequestBody List<Long> produtoIds) {
+        Map<Long, Integer> estoqueMap = produtoService.verificarEstoque(produtoIds);
+        return ResponseEntity.ok(estoqueMap);
+    }
+
 }

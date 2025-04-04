@@ -22,9 +22,9 @@
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/dashboard}">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/produtos}">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link text-white" th:href="@{/clientes}">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link text-white" href="#">Relatórios</a></li>                
-                    <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>                   
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/vendas}">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/relatorios}">Relatórios</a></li>
+                    <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>                  
                 </ul>
             </nav>
 
@@ -59,7 +59,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Quantidade em Estoque</label>
-                                <input type="number" class="form-control" th:field="*{quantidadeEmEstoque}" required min="1">
+                                <input type="number" class="form-control" th:field="*{quantidadeEmEstoque}" required min="0">
                                 <div class="text-danger mt-1" th:if="${#fields.hasErrors('quantidadeEmEstoque')}" th:errors="*{quantidadeEmEstoque}"></div>
                             </div>
 
