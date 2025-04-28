@@ -1,5 +1,7 @@
 package projeto.gestao_vendas.controller;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,8 @@ public class VendaController {
     @PostMapping("/finalizar")
     @ResponseBody
     public ResponseEntity<?> finalizarVenda(@RequestBody Venda venda) {
+
+        venda.setDataHora(ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).toLocalDateTime());
 
         System.out.println("Recebido no /vendas/finalizar:");
         System.out.println("Cliente ID: " + (venda.getCliente() != null ? venda.getCliente().getId() : "null"));

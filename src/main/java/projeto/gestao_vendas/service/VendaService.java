@@ -1,5 +1,7 @@
 package projeto.gestao_vendas.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import projeto.gestao_vendas.model.Venda;
@@ -9,6 +11,7 @@ import projeto.gestao_vendas.repository.VendaRepository;
 import projeto.gestao_vendas.repository.ItemVendaRepository;
 import projeto.gestao_vendas.repository.ProdutoRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,6 +78,14 @@ public class VendaService {
 
         System.out.println("Venda registrada com sucesso! ID: " + venda.getId());
         return venda;
+    }
+
+    public Page<Venda> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim, Pageable pageable) {
+        return vendaRepository.findByDataHoraBetween(inicio, fim, pageable);
+    }
+
+    public Double calcularTotalVendidoPorPeriodo(LocalDateTime inicio, LocalDateTime fim) {
+        return vendaRepository.somarTotalPorPeriodo(inicio, fim);
     }
 
 }

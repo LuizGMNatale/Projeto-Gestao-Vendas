@@ -37,7 +37,7 @@ public class Venda {
     private Double total = 0.0;
 
     public Venda() {
-        this.dataHora = LocalDateTime.now();
+       
     }
 
     public void addItem(ItemVenda item) {

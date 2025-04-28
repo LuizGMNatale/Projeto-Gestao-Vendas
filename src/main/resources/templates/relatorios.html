@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Sistema de Vendas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 col-lg-2 d-md-block bg-dark sidebar p-3">
+                <h4 class="text-white text-center">Sistema de Vendas</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/dashboard}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/produtos}">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/clientes}">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" th:href="@{/vendas}">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white active" th:href="@{/relatorios}">Relatórios</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link text-danger" th:href="@{/auth/logout}">Sair</a></li>
+                </ul>
+            </nav>
+
+            <!-- Conteúdo principal -->
+            <main class="col-md-10 col-lg-10 ms-sm-auto px-md-4">
+                <h2 class="mt-3">Relatório de Vendas por Período</h2>
+
+                <!-- Mensagem de erro -->
+                <p class="alert alert-danger" th:if="${erro}" th:text="${erro}"></p>
+
+                <!-- Filtro por data -->
+                <form class="row g-3 mt-3 mb-4" method="get" th:action="@{/relatorios}">
+                    <div class="col-md-3">
+                        <label class="form-label">Data Inicial</label>
+                        <input type="date" class="form-control" name="dataInicio" th:value="${dataInicio}" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Data Final</label>
+                        <input type="date" class="form-control" name="dataFim" th:value="${dataFim}" required>
+                    </div>
+                    <div class="col-md-3 align-self-end">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+
+                <!-- Aviso quando nenhuma data estiver selecionada -->
+                <p th:if="${!datasSelecionadas}" class="text-center text-muted mt-4">
+                    Selecione um intervalo de datas para visualizar os dados.
+                </p>
+
+                <!-- Resultados -->
+                <div class="table-responsive" th:if="${datasSelecionadas}">
+                    <table class="table table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="text-center">ID Venda</th>
+                                <th class="text-center">Cliente</th>
+                                <th class="text-end">Valor Total</th>
+                                <th class="text-end">Qtd. Itens</th>
+                                <th class="text-end">Data e Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="venda : ${vendas.content}">
+                                <td class="text-center" th:text="${venda.id}"></td>
+                                <td class="text-center" th:text="${venda.cliente.nome}"></td>
+                                <td class="text-end"
+                                    th:text="'R$ ' + ${#numbers.formatDecimal(venda.total, 1, 2, 'COMMA')}"></td>
+                                <td class="text-end" th:text="${venda.itens.size()}"></td>
+                                <td class="text-end" th:text="${#temporals.format(venda.dataHora, 'dd/MM/yyyy HH:mm')}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Mensagem se não houver vendas -->
+                    <p th:if="${vendas.empty}" class="text-center text-muted">Nenhuma venda encontrada no período.</p>
+
+                    <!-- Total vendido -->
+                    <div class="mt-3" th:if="${!vendas.empty}">
+                        <h5 class="text-end">
+                            Total vendido:
+                            <span class="text-success"
+                                th:text="'R$ ' + ${#numbers.formatDecimal(totalVendido, 1, 2, 'COMMA')}"></span>
+                        </h5>
+                    </div>
+
+                    <!-- Paginação -->
+                    <nav th:if="${vendas.totalPages > 1}" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${vendas.first} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/relatorios(page=${vendas.number - 1}, dataInicio=${dataInicio}, dataFim=${dataFim})}">Anterior</a>
+                            </li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(0, vendas.totalPages - 1)}"
+                                th:classappend="${vendas.number == i} ? 'active'">
+                                <a class="page-link"
+                                    th:href="@{/relatorios(page=${i}, dataInicio=${dataInicio}, dataFim=${dataFim})}"
+                                    th:text="${i + 1}"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${vendas.last} ? 'disabled'">
+                                <a class="page-link"
+                                    th:href="@{/relatorios(page=${vendas.number + 1}, dataInicio=${dataInicio}, dataFim=${dataFim})}">Próxima</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Validação com JS -->
+    <script>
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (event) {
+            const dataInicio = new Date(document.querySelector("[name='dataInicio']").value);
+            const dataFim = new Date(document.querySelector("[name='dataFim']").value);
+
+            if (dataFim < dataInicio) {
+                alert("A data final não pode ser menor que a data inicial.");
+                event.preventDefault();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
