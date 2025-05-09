@@ -77,7 +77,7 @@
                                     <td class="text-center" th:text="${venda.id}"></td>
                                     <td class="text-center" th:text="${venda.cliente.id}"></td>
                                     <td class="text-end" th:text="'R$ ' + ${#numbers.formatDecimal(venda.total, 1, 2, 'COMMA')}"></td>
-                                    <td class="text-end" th:text="${venda.itens.size()}"></td>
+                                    <td class="text-end" th:text="${venda.quantidadeTotal}"></td>
                                     <td class="text-end" th:text="${#temporals.format(venda.dataHora, 'dd/MM/yyyy HH:mm')}"></td>
                                 </tr>
                             </tbody>       

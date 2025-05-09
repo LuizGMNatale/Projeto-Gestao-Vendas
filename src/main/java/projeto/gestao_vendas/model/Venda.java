@@ -54,4 +54,9 @@ public class Venda {
     public void recalcularTotal() {
         this.total = itens.stream().mapToDouble(ItemVenda::getSubtotal).sum();
     }
+
+    public int getQuantidadeTotal() {
+        return itens.stream().mapToInt(ItemVenda::getQuantidade).sum();
+    }
+    
 }
