@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import projeto.gestao_vendas.model.Cliente;
 import projeto.gestao_vendas.service.ClienteService;
 
@@ -34,16 +36,17 @@ public class ClienteController {
     }
 
     @PostMapping("/salvar")
-    public String salvarCliente(@ModelAttribute Cliente cliente, Model model) {
+    public String salvarCliente(@ModelAttribute Cliente cliente, Model model, RedirectAttributes attributes) {
         try {
             clienteService.salvarOuAtualizar(cliente);
+            attributes.addFlashAttribute("mensagem", "Cliente salvo com sucesso!");
             return "redirect:/clientes";
         } catch (RuntimeException e) {
             model.addAttribute("cliente", cliente);
             model.addAttribute("cpfCnpjErro", e.getMessage());
             return "clientes-form";
         }
-    }
+    }    
 
     @GetMapping("/editar/{id}")
     public String editarCliente(@PathVariable Long id, Model model,
@@ -66,13 +69,18 @@ public class ClienteController {
         } catch (RuntimeException e) {
             model.addAttribute("cliente", cliente);
             model.addAttribute("cpfCnpjErro", e.getMessage());
-            return "clientes-form"; 
+            return "clientes-form";
         }
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirCliente(@PathVariable Long id) {
-        clienteService.excluir(id);
+    public String excluirCliente(@PathVariable Long id, RedirectAttributes attributes) {
+        try {
+            clienteService.excluir(id);
+            attributes.addFlashAttribute("mensagem", "Cliente excluído com sucesso!");
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            attributes.addFlashAttribute("erro", e.getMessage());
+        }
         return "redirect:/clientes";
     }
 

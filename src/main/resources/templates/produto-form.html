@@ -46,7 +46,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Descrição</label>
-                                <textarea class="form-control" th:field="*{descricao}" rows="3" required minlength="5"></textarea>
+                                <textarea class="form-control" th:field="*{descricao}" rows="3" required minlength="1"></textarea>
                                 <div class="text-danger mt-1" th:if="${#fields.hasErrors('descricao')}" th:errors="*{descricao}"></div>
                             </div>
 

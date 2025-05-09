@@ -20,6 +20,6 @@ public interface VendaRepository extends JpaRepository<Venda, Long> {
 
     @Query("SELECT SUM(v.total) FROM Venda v WHERE v.dataHora BETWEEN :inicio AND :fim")
     Double somarTotalPorPeriodo(@Param("inicio") LocalDateTime inicio, @Param("fim") LocalDateTime fim);
-
+    boolean existsByClienteId(Long clienteId);
     Page<Venda> findByDataHoraBetween(LocalDateTime inicio, LocalDateTime fim, Pageable pageable);
 }

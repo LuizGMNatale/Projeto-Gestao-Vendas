@@ -61,10 +61,16 @@ public class ProdutoController {
     }
 
     @PostMapping("/excluir/{id}")
-    public String excluirProduto(@PathVariable Long id) {
-        produtoService.deletarProduto(id);
+    public String excluirProduto(@PathVariable Long id, RedirectAttributes attributes) {
+        try {
+            produtoService.deletarProduto(id);
+            attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
+        } catch (IllegalStateException e) {
+            attributes.addFlashAttribute("erro", e.getMessage()); 
+        }
         return "redirect:/produtos";
     }
+    
 
     @GetMapping("/nome/{nome}")
     public ResponseEntity<Produto> buscarPorNome(@PathVariable String nome) {

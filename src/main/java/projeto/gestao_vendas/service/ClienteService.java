@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.gestao_vendas.model.Cliente;
 import projeto.gestao_vendas.repository.ClienteRepository;
+import projeto.gestao_vendas.repository.VendaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,9 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private VendaRepository vendaRepository;
 
     public List<Cliente> listarTodos() {
         return clienteRepository.findAll();
@@ -34,6 +38,11 @@ public class ClienteService {
         if (!clienteRepository.existsById(id)) {
             throw new IllegalArgumentException("Cliente não encontrado.");
         }
+
+        if (vendaRepository.existsByClienteId(id)) {
+            throw new IllegalStateException("Este cliente está relacionado a uma venda e não pode ser excluído.");
+        }
+
         clienteRepository.deleteById(id);
     }
 
@@ -48,5 +57,5 @@ public class ClienteService {
     public boolean verificarSeClienteExiste(String nome, String cpfCnpj) {
         return clienteRepository.existsByNomeAndCpfCnpj(nome, cpfCnpj);
     }
-    
+
 }

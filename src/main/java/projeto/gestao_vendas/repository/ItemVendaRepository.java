@@ -6,4 +6,5 @@ import projeto.gestao_vendas.model.ItemVenda;
 
 @Repository
 public interface ItemVendaRepository extends JpaRepository<ItemVenda, Long> {
+    boolean existsByProdutoId(Long produtoId);
 }

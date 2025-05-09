@@ -3,6 +3,7 @@ package projeto.gestao_vendas.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import projeto.gestao_vendas.model.Produto;
+import projeto.gestao_vendas.repository.ItemVendaRepository;
 import projeto.gestao_vendas.repository.ProdutoRepository;
 
 import java.util.HashMap;
@@ -15,6 +16,9 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+
+    @Autowired
+    private ItemVendaRepository itemVendaRepository;
 
     public List<Produto> listarProdutos() {
         return produtoRepository.findAll();
@@ -39,6 +43,10 @@ public class ProdutoService {
     }
 
     public void deletarProduto(Long id) {
+        boolean possuiVenda = itemVendaRepository.existsByProdutoId(id);
+        if (possuiVenda) {
+            throw new IllegalStateException("Este produto está relacionado a uma venda e não pode ser excluído.");
+        }
         produtoRepository.deleteById(id);
     }
 
