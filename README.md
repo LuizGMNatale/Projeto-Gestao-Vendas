@@ -3,6 +3,16 @@
 
 Este é o projeto de **Gestão de Vendas** para a empresa Tom & Jerry Distribuidora.
 
+## Documentação do Projeto
+
+Abaixo estão dois arquivos complementares ao projeto:
+
+- 📄 **[Documentação Técnica - Word](Doc%20Final%20PI.docx)**  
+  Contém a descrição detalhada do sistema, casos de uso e estrutura geral.
+
+- 📊 **[Plano de Testes - Excel](Plano%20de%20teste%20v3.0.xlsx)**  
+  Contém o plano de testes do sistema.
+
 ## Acesso ao Sistema
 
 O usuário padrão para login no sistema é:
@@ -20,12 +30,17 @@ O usuário padrão para login no sistema é:
 
 Para rodar o projeto **Gestão Vendas** utilizando o Docker, siga os passos abaixo:
 
+### 📦 Imagem no Docker Hub
+
+- **Link da Imagem:** [Imagem DockerHub - Gestão Vendas v3.0](https://hub.docker.com/repository/docker/luizgmnatale/gestao-vendas/tags/v3.0/sha256-39b4328b35ba21aca9126d05f6e3a30ee8e7268a0d48ba5cb624f9fbd5343819)
+
+
 ### 1. Baixar a Imagem Docker
 
 Use o seguinte comando para fazer o **pull** da imagem do Docker Hub:
 
 ```bash
-docker pull luizgmnatale/gestao-vendas:v1.0
+docker pull luizgmnatale/gestao-vendas:v3.0
 ```
 
 ### 2. Rodar o Contêiner Docker
