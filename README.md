@@ -13,6 +13,9 @@ Abaixo estão dois arquivos complementares ao projeto:
 - 📊 **[Plano de Testes - Excel](Plano%20de%20teste%20v3.0.xlsx)**  
   Contém o plano de testes do sistema.
 
+- 📊 **[Apresentação - PDF](Sistema%20de%20Gerenciamento%20de%20Vendas.pdf)**  
+  Contém os slides utilizados na apresentação do sistema.  
+
 ## Acesso ao Sistema
 
 O usuário padrão para login no sistema é:
